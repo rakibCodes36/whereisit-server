@@ -7,7 +7,6 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5001;
 
-
 app.use(
   cors({
     origin: [
@@ -65,7 +64,6 @@ async function run() {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-         
         })
         .send({ success: true });
     });
@@ -192,7 +190,6 @@ async function run() {
       }
     });
 
-    
     app.post("/recoverItem", async (req, res) => {
       const recoveryDetails = req.body;
       const { itemId } = recoveryDetails;
@@ -219,10 +216,14 @@ async function run() {
     });
     app.get("/itemCounts", async (req, res) => {
       try {
-        const lostCount = await itemsCollection.countDocuments({ type: "lost" });
-        const foundCount = await itemsCollection.countDocuments({ type: "found" });
+        const lostCount = await itemsCollection.countDocuments({
+          type: "lost",
+        });
+        const foundCount = await itemsCollection.countDocuments({
+          type: "found",
+        });
         const recoveredCount = await recoveredCollection.countDocuments();
-    
+
         res.status(200).json({
           lostCount,
           foundCount,
@@ -232,7 +233,6 @@ async function run() {
         res.status(500).json({ message: "Failed to fetch item counts", error });
       }
     });
-
 
     app.get("/allRecovered", verifyToken, async (req, res) => {
       try {
@@ -257,13 +257,10 @@ async function run() {
 }
 run().catch(console.dir);
 
-
 app.get("/", (req, res) => {
   res.send("WhereIsIt API is running");
 });
 
-
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
- 
