@@ -217,6 +217,21 @@ async function run() {
         res.status(500).json({ message: "Failed to recover item", error });
       }
     });
+    app.get("/itemCounts", async (req, res) => {
+      try {
+        const lostCount = await itemsCollection.countDocuments({ type: "lost" });
+        const foundCount = await itemsCollection.countDocuments({ type: "found" });
+        const recoveredCount = await recoveredCollection.countDocuments();
+    
+        res.status(200).json({
+          lostCount,
+          foundCount,
+          recoveredCount,
+        });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch item counts", error });
+      }
+    });
 
 
     app.get("/allRecovered", verifyToken, async (req, res) => {
